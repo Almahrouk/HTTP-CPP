@@ -1,0 +1,5 @@
+GET /cgi/hello.py?q=test HTTP/1.1
+Host: localhost:8080
+Cookie: sessionToken=BB54AE6D76E39587
+Connection: close
+

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Webserv — A fully functional HTTP server built from scratch in C++98 as part of the 42 Network curriculum. Features non-blocking I/O, CGI, file uploads, and more.">
+  <title>Webserv — Custom HTTP Server in C++</title>
+  <link rel="stylesheet" href="showcase.css">
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">&lt;webserv/&gt;</a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="#dashboard">Tests</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-badge animate">
+        <span class="dot"></span>
+        C++98 &middot; 42 Network &middot; HTTP/1.1
+      </div>
+      <h1 class="animate delay-1">
+        <span class="gradient">Webserv</span><br>
+        Custom HTTP Server in C++
+      </h1>
+      <p class="animate delay-2">
+        A fully functional HTTP server built from scratch in C++98. It handles real HTTP requests from browsers and
+        clients, operates entirely non-blocking using a single <code
+          style="font-family:'JetBrains Mono',monospace;background:rgba(6,182,212,0.15);padding:0.15rem 0.4rem;border-radius:4px;font-size:0.9rem;color:var(--accent-cyan);">poll()</code>
+        call for all I/O operations, serves static files, executes CGI scripts, and processes file uploads.
+      </p>
+      <div class="hero-actions animate delay-3">
+        <a href="#dashboard" class="btn btn-primary">⚡ Test Dashboard</a>
+        <a href="#architecture" class="btn btn-outline">📐 Architecture</a>
+      </div>
+      <div class="hero-stats animate delay-4">
+        <div class="stat">
+          <div class="stat-value">C++98</div>
+          <div class="stat-label">Language Standard</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">HTTP/1.1</div>
+          <div class="stat-label">Protocol</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">poll()</div>
+          <div class="stat-label">I/O Multiplexing</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">3</div>
+          <div class="stat-label">Team Members</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="section" id="features">
+    <div class="section-label">Capabilities</div>
+    <h2 class="section-title">Key Features</h2>
+    <p class="section-desc">
+      Every feature carefully implemented to comply with the HTTP/1.1 specification while maintaining a clean, efficient
+      architecture.
+    </p>
+    <div class="features-grid">
+
+      <div class="card">
+        <div class="feature-icon cyan">⚡</div>
+        <div class="feature-title">Non-Blocking I/O</div>
+        <div class="feature-desc">Single poll() loop multiplexing all client connections. No threading, no forking —
+          pure event-driven architecture.</div>
+      </div>
+
+      <div class="card">
+        <div class="feature-icon green">📨</div>
+        <div class="feature-title">HTTP Request Parsing</div>
+        <div class="feature-desc">Full parsing of GET, POST, and DELETE methods with header extraction, chunked transfer
+          decoding, and body handling.</div>
+      </div>
+
+      <div class="card">
+        <div class="feature-icon blue">📁</div>
+        <div class="feature-title">Static File Serving</div>
+        <div class="feature-desc">Efficient file serving with correct MIME types, content-length headers, and proper
+          HTTP status codes.</div>
+      </div>
+
+      <div class="card">
+        <div class="feature-icon purple">📤</div>
+        <div class="feature-title">File Uploads</div>
+        <div class="feature-desc">Multipart form-data parsing for file uploads with configurable maximum body size
+          limits.</div>
+      </div>
+
+      <div class="card">
+        <div class="feature-icon orange">⚙️</div>
+        <div class="feature-title">CGI Execution</div>
+        <div class="feature-desc">Execute Python and PHP scripts via CGI protocol. Proper environment variable setup,
+          stdin/stdout piping, and timeout handling.</div>
+      </div>
+
+      <div class="card">
+        <div class="feature-icon red">🚫</div>
+        <div class="feature-title">Custom Error Pages</div>
+        <div class="feature-desc">Configurable error pages for each status code (404, 405, 413, 500, etc.) served with
+          correct HTTP semantics.</div>
+      </div>
+
+      <div class="card">
+        <div class="feature-icon cyan">📂</div>
+        <div class="feature-title">Autoindex</div>
+        <div class="feature-desc">Automatic directory listing when no index file is present. Toggleable per-route in the
+          configuration file.</div>
+      </div>
+
+      <div class="card">
+        <div class="feature-icon blue">🔧</div>
+        <div class="feature-title">Configuration System</div>
+        <div class="feature-desc">NGINX-inspired config parser supporting multiple server blocks, routes, redirections,
+          and per-route method restrictions.</div>
+      </div>
+
+      <div class="card">
+        <div class="feature-icon pink">🍪</div>
+        <div class="feature-title">Cookies &amp; Multi-CGI</div>
+        <div class="feature-desc">Bonus: Cookie management via Set-Cookie/Cookie headers and support for multiple CGI
+          interpreters.</div>
+        <span class="feature-tag">Bonus</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Architecture Section -->
+  <section class="section" id="architecture">
+    <div class="section-label">Design</div>
+    <h2 class="section-title">Architecture Overview</h2>
+    <p class="section-desc">
+      An event-driven design built around a single poll() loop, ensuring all operations remain non-blocking and
+      efficient.
+    </p>
+
+    <div class="arch-flow">
+      <div class="arch-step">
+        <div class="arch-step-icon">🌐</div>
+        <div class="arch-step-label">Client</div>
+        <div class="arch-step-sub">TCP Connection</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">
+        <div class="arch-step-icon">🔄</div>
+        <div class="arch-step-label">poll()</div>
+        <div class="arch-step-sub">Event Loop</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">
+        <div class="arch-step-icon">📋</div>
+        <div class="arch-step-label">Parser</div>
+        <div class="arch-step-sub">Request Decode</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">
+        <div class="arch-step-icon">⚙️</div>
+        <div class="arch-step-label">Handler</div>
+        <div class="arch-step-sub">Route &amp; Process</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-step">
+        <div class="arch-step-icon">📤</div>
+        <div class="arch-step-label">Response</div>
+        <div class="arch-step-sub">Build &amp; Send</div>
+      </div>
+    </div>
+
+    <div class="arch-details">
+      <div class="card">
+        <div class="arch-detail-title">// Event-Driven Design</div>
+        <div class="arch-detail-text">A single poll() call monitors all file descriptors — listening sockets, client
+          connections, and CGI pipes. New events are dispatched without blocking.</div>
+      </div>
+      <div class="card">
+        <div class="arch-detail-title">// Connection Lifecycle</div>
+        <div class="arch-detail-text">Each client connection is tracked with its own read buffer, write buffer, and
+          state machine. Connections are timed out after inactivity.</div>
+      </div>
+      <div class="card">
+        <div class="arch-detail-title">// Request Pipeline</div>
+        <div class="arch-detail-text">Incoming bytes are accumulated, parsed into structured request objects, matched
+          against configured routes, and dispatched to the appropriate handler.</div>
+      </div>
+      <div class="card">
+        <div class="arch-detail-title">// Modular Architecture</div>
+        <div class="arch-detail-text">Clean separation between config parsing, request parsing, request handling
+          (static/CGI/upload), and response building. Each module is independently testable.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section class="section" id="team">
+    <div class="section-label">Contributors</div>
+    <h2 class="section-title">Team Contributions</h2>
+    <p class="section-desc">
+      Three developers, each owning a critical layer of the server stack.
+    </p>
+
+    <div class="team-grid">
+
+      <!-- Yaaqoub -->
+      <div class="card team-card">
+        <div class="team-header">
+          <div class="team-avatar t-cyan">Y</div>
+          <div>
+            <div class="team-name">Yaaqoub</div>
+            <div class="team-role">Core &amp; Networking</div>
+          </div>
+        </div>
+        <ul class="team-list">
+          <li>Server core implementation and socket initialization</li>
+          <li>Event loop design using poll() for I/O multiplexing</li>
+          <li>Client session management and connection lifecycle</li>
+          <li>CGI process integration and pipe management</li>
+          <li>HTTP request parsing and header extraction</li>
+        </ul>
+      </div>
+
+      <!-- Tahalla -->
+      <div class="card team-card">
+        <div class="team-header">
+          <div class="team-avatar t-blue">T</div>
+          <div>
+            <div class="team-name">Tahalla</div>
+            <div class="team-role">Configuration &amp; HTTP Handling</div>
+          </div>
+        </div>
+        <ul class="team-list">
+          <li>Configuration file parser with NGINX-style syntax</li>
+          <li>HTTP request handling and method dispatching logic</li>
+          <li>Implementation of GET, POST, DELETE methods</li>
+          <li>Autoindex (directory listing) generation</li>
+          <li>Route matching and server block configuration</li>
+        </ul>
+      </div>
+
+      <!-- Adnane -->
+      <div class="card team-card">
+        <div class="team-header">
+          <div class="team-avatar t-purple">A</div>
+          <div>
+            <div class="team-name">Adnane</div>
+            <div class="team-role">Response &amp; Advanced Features</div>
+          </div>
+        </div>
+        <ul class="team-list">
+          <li>HTTP response builder with status lines and headers</li>
+          <li>CGI output parsing and response integration</li>
+          <li>Content-type detection and response formatting</li>
+        </ul>
+        <div class="team-bonus">
+          <div class="team-bonus-label">★ Bonus Features</div>
+          <ul class="team-bonus-list">
+            <li>▸ Support for multiple CGI interpreters (Python, PHP)</li>
+            <li>▸ Cookie handling via Set-Cookie / Cookie headers</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Test Dashboard Section -->
+  <section class="section" id="dashboard">
+    <div class="section-label">Interactive</div>
+    <h2 class="section-title">Test Dashboard</h2>
+    <p class="section-desc">
+      Click any test to send a real request to the running server. Results appear in the response panel below.
+    </p>
+
+    <div class="dash-grid">
+
+      <!-- HTTP Tests -->
+      <div class="card dash-panel">
+        <div class="dash-panel-header">
+          <span class="dash-panel-dot green"></span>
+          <span class="dash-panel-title">HTTP Method Tests</span>
+        </div>
+        <div class="dash-buttons">
+          <a href="/index.html" class="dash-btn" id="test-get-index">
+            <span class="method get">GET</span>
+            <span class="path">/index.html</span>
+            <span class="status">200</span>
+          </a>
+          <a href="/showcase.html" class="dash-btn" id="test-get-showcase">
+            <span class="method get">GET</span>
+            <span class="path">/showcase.html</span>
+            <span class="status">200</span>
+          </a>
+          <a href="/file-upload.html" class="dash-btn" id="test-get-upload-page">
+            <span class="method get">GET</span>
+            <span class="path">/file-upload.html</span>
+            <span class="status">Upload Form</span>
+          </a>
+          <a href="/uploads" class="dash-btn" id="test-get-uploads-dir">
+            <span class="method get">GET</span>
+            <span class="path">/uploads</span>
+            <span class="status">Autoindex</span>
+          </a>
+          <button class="dash-btn" id="test-delete-file" onclick="runFetchTest('/uploads/test-file.txt', 'DELETE')">
+            <span class="method delete">DEL</span>
+            <span class="path">/uploads/test-file.txt</span>
+            <span class="status">→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- CGI Tests -->
+      <div class="card dash-panel">
+        <div class="dash-panel-header">
+          <span class="dash-panel-dot blue"></span>
+          <span class="dash-panel-title">CGI Execution Tests</span>
+        </div>
+        <div class="dash-buttons">
+          <a href="/cgi/hello.py" class="dash-btn" id="test-cgi-python">
+            <span class="method cgi">CGI</span>
+            <span class="path">/cgi/hello.py</span>
+            <span class="status">Python</span>
+          </a>
+          <a href="/cgi/hello.py?name=webserv&lang=cpp" class="dash-btn" id="test-cgi-query">
+            <span class="method get">GET</span>
+            <span class="path">/cgi/hello.py?name=...</span>
+            <span class="status">Query String</span>
+          </a>
+          <a href="/cgi/hello.sh" class="dash-btn" id="test-cgi-bash">
+            <span class="method cgi">CGI</span>
+            <span class="path">/cgi/hello.sh</span>
+            <span class="status">Bash</span>
+          </a>
+          <button class="dash-btn" id="test-cgi-post"
+            onclick="runFetchTest('/cgi/hello_post.py', 'POST', 'name=yaaqoub&email=yaaqoub@gmail.com')">
+            <span class="method post">POST</span>
+            <span class="path">/cgi/hello_post.py</span>
+            <span class="status">POST Data</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Error & Special Tests -->
+      <div class="card dash-panel">
+        <div class="dash-panel-header">
+          <span class="dash-panel-dot red"></span>
+          <span class="dash-panel-title">Error &amp; Special Tests</span>
+        </div>
+        <div class="dash-buttons">
+          <a href="/this-does-not-exist" class="dash-btn" id="test-err-404">
+            <span class="method err">ERR</span>
+            <span class="path">404 Not Found</span>
+            <span class="status">404</span>
+          </a>
+          <button class="dash-btn" id="test-err-405" onclick="runFetchTest('/', 'DELETE')">
+            <span class="method err">ERR</span>
+            <span class="path">405 DELETE on /</span>
+            <span class="status">405</span>
+          </button>
+          <button class="dash-btn" id="test-err-413"
+            onclick="runFetchTest('/uploads', 'POST', 'x'.repeat(11 * 1024 * 1024), true)">
+            <span class="method err">ERR</span>
+            <span class="path">413 Payload Too Large</span>
+            <span class="status">413</span>
+          </button>
+          <a href="/redirect" class="dash-btn" id="test-redirect">
+            <span class="method get">GET</span>
+            <span class="path">/redirect</span>
+            <span class="status">301</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Response Panel -->
+    <div class="card" id="response-panel" style="margin-top:1.5rem;display:none;">
+      <div class="dash-panel-header">
+        <span class="dash-panel-dot green" id="resp-dot"></span>
+        <span class="dash-panel-title">Response</span>
+        <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--text-muted);"
+          id="resp-meta"></span>
+      </div>
+      <pre id="resp-body"
+        style="background:rgba(0,0,0,0.3);border:1px solid var(--border-glass);border-radius:8px;padding:1rem;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--text-secondary);max-height:300px;overflow:auto;white-space:pre-wrap;word-break:break-word;margin-top:0.75rem;"></pre>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">&lt;webserv/&gt;</div>
+      <p>Project developed as part of the 42 Network curriculum</p>
+      <div class="footer-authors">Yaaqoub &middot; Tahalla &middot; Adnane</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Fetch-based test runner for non-GET methods
+    async function runFetchTest(url, method, body, isRaw) {
+      const panel = document.getElementById('response-panel');
+      const dot = document.getElementById('resp-dot');
+      const meta = document.getElementById('resp-meta');
+      const respBody = document.getElementById('resp-body');
+
+      panel.style.display = 'block';
+      dot.className = 'dash-panel-dot';
+      dot.style.background = 'var(--accent-orange)';
+      meta.textContent = method + ' ' + url + ' — loading...';
+      respBody.textContent = '';
+
+      try {
+        const opts = { method: method };
+        if (body && !isRaw) {
+          opts.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+          opts.body = body;
+        } else if (body && isRaw) {
+          opts.body = body;
+        }
+
+        const start = performance.now();
+        const res = await fetch(url, opts);
+        const elapsed = Math.round(performance.now() - start);
+        const text = await res.text();
+
+        const statusColor = res.status < 300 ? 'var(--accent-green)' :
+          res.status < 400 ? 'var(--accent-cyan)' :
+            res.status < 500 ? 'var(--accent-orange)' : 'var(--accent-red)';
+
+        dot.style.background = statusColor;
+        meta.innerHTML = '<span style="color:' + statusColor + '">' + res.status + ' ' + res.statusText + '</span> — ' + method + ' ' + url + ' — ' + elapsed + 'ms';
+        respBody.textContent = text.substring(0, 5000) || '(empty response body)';
+      } catch (err) {
+        dot.style.background = 'var(--accent-red)';
+        meta.textContent = 'Error — ' + method + ' ' + url;
+        respBody.textContent = 'Request failed: ' + err.message;
+      }
+
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Animate cards on scroll
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            entry.target.style.animationDelay = `${i * 0.08}s`;
+            entry.target.classList.add('animate');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.card, .arch-step').forEach(el => observer.observe(el));
+
+      // Smooth nav background
+      const nav = document.querySelector('.nav');
+      window.addEventListener('scroll', () => {
+        nav.style.background = window.scrollY > 50
+          ? 'rgba(10, 14, 26, 0.95)'
+          : 'rgba(10, 14, 26, 0.8)';
+      });
+    });
+  </script>
+
+</body>
+
+</html>

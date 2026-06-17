@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Yaaqoub Charkouk | Software Engineering Portfolio</title>
+    <!-- Google Fonts & Font Awesome for modern icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            color: #0f172a;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        /* dynamic glass morphism + gradient accents */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* modern background gradient animation */
+        .bg-gradient-dynamic {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 10% 20%, rgba(15, 23, 42, 0.02) 0%, rgba(99, 102, 241, 0.03) 100%);
+        }
+
+        /* card style */
+        .card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(2px);
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.02);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.12);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        /* header hero area */
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .badge-glow {
+            display: inline-block;
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+            padding: 0.25rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1e1b4b;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, #0f172a, #2d3a6e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .highlight {
+            color: #4f46e5;
+            background: linear-gradient(120deg, #eef2ff, #ffffff);
+            padding: 0 0.2rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.8rem 1.6rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .btn-primary {
+            background: #0f172a;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-primary:hover {
+            background: #1e293b;
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #cbd5e1;
+            color: #1e293b;
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+            border-color: #4f46e5;
+            color: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        /* skills cloud */
+        .skills-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            margin: 1.5rem 0 0.5rem;
+        }
+
+        .skill-tag {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #1e293b;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .skill-tag:hover {
+            border-color: #818cf8;
+            background: #f8fafc;
+            transform: translateY(-2px);
+        }
+
+        /* section titles */
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin-bottom: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            background: #eef2ff;
+            padding: 0.5rem;
+            border-radius: 1rem;
+            color: #4f46e5;
+            font-size: 1.3rem;
+        }
+
+        /* projects grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            border: 1px solid #eef2ff;
+            box-shadow: 0 6px 12px -8px rgba(0, 0, 0, 0.05);
+        }
+
+        .project-card:hover {
+            border-color: #c7d2fe;
+            box-shadow: 0 20px 25px -12px rgba(79, 70, 229, 0.12);
+        }
+
+        .project-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.8rem;
+            color: #4f46e5;
+        }
+
+        .project-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-date {
+            font-size: 0.75rem;
+            color: #64748b;
+            font-weight: 500;
+            margin-bottom: 0.8rem;
+            letter-spacing: 0.3px;
+        }
+
+        .project-desc {
+            color: #334155;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.45;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tech-stack span {
+            background: #f1f5f9;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.7rem;
+            border-radius: 30px;
+            font-weight: 500;
+            color: #334155;
+        }
+
+        /* experience & education timeline style */
+        .timeline-item {
+            background: white;
+            border-radius: 1.2rem;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 5px solid #4f46e5;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            transition: all 0.2s;
+        }
+
+        .timeline-item:hover {
+            background: #ffffff;
+            transform: translateX(4px);
+            box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.08);
+        }
+
+        .timeline-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .timeline-date {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #4b5563;
+            background: #f1f5f9;
+            padding: 0.2rem 0.7rem;
+            border-radius: 40px;
+        }
+
+        .timeline-sub {
+            font-size: 0.85rem;
+            color: #475569;
+            margin-top: 0.5rem;
+        }
+
+        .flex-2cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.8rem;
+        }
+
+        @media (max-width: 780px) {
+            .flex-2cols {
+                grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            .hero {
+                flex-direction: column;
+                align-items: start;
+            }
+            .container {
+                padding: 1.5rem;
+            }
+        }
+
+        footer {
+            margin-top: 4rem;
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.8rem;
+            color: #5b6e8c;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* small animations */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeUp 0.5s ease forwards;
+        }
+
+        .section {
+            opacity: 0;
+            animation: fadeUp 0.5s ease forwards;
+            animation-delay: 0.1s;
+        }
+
+        .section:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+        .section:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+        .section:nth-child(4) {
+            animation-delay: 0.25s;
+        }
+    </style>
+</head>
+<body>
+<div class="bg-gradient-dynamic"></div>
+
+<main class="container">
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-text">
+            <div class="badge-glow">
+                <i class="fas fa-code" style="margin-right: 0.4rem;"></i> Software Engineering Student
+            </div>
+            <h1>Yaaqoub <span class="highlight">Charkouk</span></h1>
+            <p style="font-size: 1.1rem; color: #2c3e66; max-width: 550px; margin: 1rem 0 0.5rem;">
+                Low-level systems & backend enthusiast · C/C++ · Linux · Building performant software from scratch.
+            </p>
+            <div class="btn-group">
+                <a href="https://github.com/yaaqoub-charkouk" target="_blank" class="btn btn-primary">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/yaaqoub-charkouk/" target="_blank" class="btn btn-outline">
+                    <i class="fab fa-linkedin-in"></i> LinkedIn
+                </a>
+                <a href="mailto:yaaqoubcharkouk@gmail.com" class="btn btn-outline">
+                    <i class="fas fa-envelope"></i> Email
+                </a>
+            </div>
+            <!-- Contact line -->
+            <div style="margin-top: 1.2rem; font-size: 0.85rem; color: #475569; display: flex; gap: 1rem; flex-wrap: wrap;">
+                <span><i class="fas fa-phone-alt"></i> +212 612 479225</span>
+                <span><i class="fas fa-map-marker-alt"></i> Fnideq / Tetouan, Morocco</span>
+            </div>
+        </div>
+        <div style="background: rgba(255,255,240,0.3); border-radius: 2rem; padding: 0.5rem 1rem; backdrop-filter: blur(8px);">
+            <div class="skills-cloud" style="justify-content: flex-end;">
+                <span class="skill-tag"><i class="fab fa-cuttlefish"></i> C/C++</span>
+                <span class="skill-tag"><i class="fab fa-linux"></i> Linux</span>
+                <span class="skill-tag"><i class="fas fa-network-wired"></i> Socket</span>
+                <span class="skill-tag"><i class="fas fa-code-branch"></i> Git</span>
+                <span class="skill-tag">HTTP/1.1</span>
+                <span class="skill-tag">Ray Tracing</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Competencies / Summary as modern row -->
+    <div class="card" style="padding: 1.8rem; margin-bottom: 2rem;">
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+            <div>
+                <h3 style="font-weight: 700; display: flex; gap: 0.5rem;"><i class="fas fa-bolt" style="color:#4f46e5;"></i> Core Competencies</h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem;">
+                    <span class="skill-tag" style="background:#eef2ff;">C/C++ Programming</span>
+                    <span class="skill-tag" style="background:#eef2ff;">Object-Oriented Design</span>
+                    <span class="skill-tag" style="background:#eef2ff;">Low-Level / Backend</span>
+                    <span class="skill-tag" style="background:#eef2ff;">Algorithmic Problem Solving</span>
+                    <span class="skill-tag" style="background:#eef2ff;">Socket Programming</span>
+                    <span class="skill-tag" style="background:#eef2ff;">Unix Systems</span>
+                </div>
+            </div>
+            <div><i class="fas fa-microchip" style="font-size: 2rem; color: #94a3b8;"></i></div>
+        </div>
+    </div>
+
+    <!-- Professional Experience & Education two cols -->
+    <div class="flex-2cols section">
+        <!-- Experience -->
+        <div>
+            <div class="section-title"><i class="fas fa-briefcase"></i> Experience</div>
+            <div class="timeline-item">
+                <div class="timeline-title">
+                    <span>Network & System Administration Assistant</span>
+                    <span class="timeline-date">Jun 2023 – Present</span>
+                </div>
+                <div style="font-weight: 500; font-size: 0.85rem; color:#475569;">Regional Directorate of National Education – Fnideq Strait</div>
+                <div class="timeline-sub">Network configuration & maintenance, performance monitoring, technical team support. Hands-on exposure to enterprise IT infrastructure.</div>
+            </div>
+        </div>
+        <!-- Education -->
+        <div>
+            <div class="section-title"><i class="fas fa-graduation-cap"></i> Education</div>
+            <div class="timeline-item">
+                <div class="timeline-title">1337 Coding School (UM6P – 42 Network) <span class="timeline-date">2024 – 2027</span></div>
+                <div class="timeline-sub">Project-based software engineering · C/C++, Linux, systems programming · Peer-to-peer learning, real-world technical projects.</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-title">Faculty of Sciences Tetouan (UAE) <span class="timeline-date">2023 – 2026</span></div>
+                <div class="timeline-sub">Bachelor of Science in Mathematics & Computer Science (SMI) — Algorithms, OS, DB, networks.</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-title">ISMONTIC Specialized Institute <span class="timeline-date">2020 – 2023</span></div>
+                <div class="timeline-sub">Computer Maintenance & Networking Technician (BAC PRO) · CCNA-level training, Cisco networking.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Projects Section with dynamic modern cards -->
+    <div class="section" style="margin-top: 1rem;">
+        <div class="section-title"><i class="fas fa-laptop-code"></i> Featured Projects</div>
+        <div class="projects-grid">
+            <!-- Webserv -->
+            <div class="project-card">
+                <div class="project-icon"><i class="fas fa-server"></i></div>
+                <div class="project-title">Webserv</div>
+                <div class="project-date">April 2026</div>
+                <div class="project-desc">Fully compliant HTTP/1.1 web server in C++ — request routing, CGI, non-blocking socket management, and Linux integration. Modular architecture with high performance.</div>
+                <div class="tech-stack"><span>C++</span><span>HTTP/1.1</span><span>Socket</span><span>Linux</span></div>
+            </div>
+            <!-- miniRT -->
+            <div class="project-card">
+                <div class="project-icon"><i class="fas fa-cube"></i></div>
+                <div class="project-title">miniRT</div>
+                <div class="project-date">September 2025</div>
+                <div class="project-desc">3D ray tracing engine in C — mathematical rendering, lighting, shadows, object intersection & scene rendering. Optimized memory footprint and rendering loops.</div>
+                <div class="tech-stack"><span>C</span><span>Ray Tracing</span><span>Math</span><span>Performance</span></div>
+            </div>
+            <!-- Minishell -->
+            <div class="project-card">
+                <div class="project-icon"><i class="fas fa-terminal"></i></div>
+                <div class="project-title">Minishell</div>
+                <div class="project-date">April 2025</div>
+                <div class="project-desc">Unix-like shell in C — command execution, pipes, redirections, environment variables, signal handling. Robust process control and structured system design.</div>
+                <div class="tech-stack"><span>C</span><span>Unix</span><span>Processes</span><span>Signals</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Certifications & Awards Row (two sections) -->
+    <div class="flex-2cols section">
+        <div>
+            <div class="section-title"><i class="fas fa-certificate"></i> Certifications</div>
+            <div class="card" style="padding: 1.2rem 1.5rem;">
+                <ul style="list-style: none;">
+                    <li style="margin-bottom: 1rem;"><i class="fab fa-cisco" style="color:#1ba0d7; width: 1.8rem;"></i> <strong>CCNA:</strong> Introduction to Networks | Cisco 2025</li>
+                    <li style="margin-bottom: 1rem;"><i class="fas fa-exchange-alt" style="color:#1ba0d7;"></i> <strong>CCNA:</strong> Switching, Routing & Wireless Essentials | 2025</li>
+                    <li><i class="fab fa-python" style="color:#306998;"></i> <strong>Python Developer</strong> | SoloLearn 2024</li>
+                </ul>
+            </div>
+        </div>
+        <div>
+            <div class="section-title"><i class="fas fa-trophy"></i> Awards & Honors</div>
+            <div class="card" style="padding: 1.2rem 1.5rem;">
+                <div class="timeline-item" style="border-left-color: #fbbf24; margin-bottom: 1rem;">
+                    <div class="timeline-title">🏆 Regional Baccalaureate Excellence Award</div>
+                    <div class="timeline-sub">Computer Maintenance & Networks — Ministry of Education, Fnideq Strait | Jan 2023</div>
+                </div>
+                <div class="timeline-item" style="border-left-color: #fbbf24;">
+                    <div class="timeline-title">⭐ Scientific & Industrial Pole First Class</div>
+                    <div class="timeline-sub">High School Academic Excellence Award — Al Imam Al Ghazali, Martil | Jan 2022</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Summary / open source spirit -->
+    <div class="card section" style="padding: 1.8rem; margin-top: 1rem; text-align: center;">
+        <i class="fas fa-quote-left" style="font-size: 2rem; color: #cbd5e1;"></i>
+        <p style="max-width: 750px; margin: 0.8rem auto; color: #2d3a6e; font-weight: 500;">Passionate about building innovative software from low-level systems to AI-driven backends. Strong believer in clean code, performance, and collaborative engineering.</p>
+        <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1.2rem;">
+            <a href="https://github.com/yaaqoub-charkouk" target="_blank" style="color:#4f46e5; text-decoration: none; font-weight: 500;"><i class="fab fa-github"></i> github/yaaqoub-charkouk</a>
+            <span>•</span>
+            <a href="https://www.linkedin.com/in/yaaqoub-charkouk/" target="_blank" style="color:#4f46e5; text-decoration: none;"><i class="fab fa-linkedin"></i> yaaqoub-charkouk</a>
+        </div>
+    </div>
+    <footer>
+        <i class="far fa-copyright"></i> 2026 Yaaqoub Charkouk — Built with modern C++ spirit & dynamic design
+    </footer>
+</main>
+
+<!-- Smooth scroll optional but dynamic effect -->
+<script>
+    // simple dynamic intersection observer for subtle additional pop (already css animated)
+    const sections = document.querySelectorAll('.section');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.05 });
+    sections.forEach(section => observer.observe(section));
+    // initial style fix for any missing
+    document.querySelectorAll('.section').forEach(el => {
+        if(!el.style.opacity) el.style.opacity = '0';
+        el.style.transform = 'translateY(12px)';
+    });
+</script>
+</body>
+</html>

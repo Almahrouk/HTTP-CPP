@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Test Web Server Methods</title>
+  <style>
+    :root { --bg-1: #0f172a; --bg-2: #1e293b; --card: #111827; --text: #e5e7eb; --muted: #94a3b8; --accent: #f59e0b; --accent-2: #ef4444; --border: rgba(148,163,184,0.25); }
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body { min-height:100vh; font-family: "Trebuchet MS", "Gill Sans", sans-serif; color:var(--text); background: radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.18), transparent 35%), radial-gradient(circle at 90% 80%, rgba(239, 68, 68, 0.15), transparent 40%), linear-gradient(130deg, var(--bg-1), var(--bg-2)); padding:24px; display:flex; flex-direction:column; align-items:center; }
+    
+    header { text-align: center; margin-bottom: 30px; animation: rise 450ms ease-out; }
+    header h1 { font-size: clamp(32px, 5vw, 48px); letter-spacing: 1px; margin-bottom: 10px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    header p { color: var(--muted); font-size: 18px; }
+
+    .nav-links { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 30px; animation: rise 550ms ease-out; }
+    .nav-links a { text-decoration: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); transition: all 0.2s; backdrop-filter: blur(5px); }
+    .nav-links a:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(245,158,11,0.2); }
+
+    .container { width: min(1000px, 100%); display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; animation: rise 650ms ease-out; }
+
+    .card { background:linear-gradient(180deg, rgba(17,24,39,0.92), rgba(2,6,23,0.92)); border:1px solid var(--border); border-radius:18px; padding:24px; box-shadow:0 12px 30px rgba(0,0,0,0.3); display: flex; flex-direction: column; }
+    .card h3 { font-size: 20px; margin-bottom: 16px; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+
+    form { display: flex; flex-direction: column; gap: 12px; flex-grow: 1; justify-content: space-between; }
+    .form-group { display: flex; flex-direction: column; gap: 12px; }
+    label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: #cbd5e1; }
+    input[type="text"], input[type="email"], input[type="file"] { padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: inherit; transition: border-color 0.2s; }
+    input:focus { outline: none; border-color: var(--accent); }
+
+    button { margin-top: 10px; padding: 12px 18px; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #0b1020; transition: transform 0.1s, box-shadow 0.2s; }
+    button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(245,158,11,0.3); }
+    button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .full-width { grid-column: 1 / -1; }
+
+    pre { background: rgba(0,0,0,0.4); padding: 16px; border-radius: 8px; overflow-x: auto; font-family: monospace; font-size: 13px; color: #a78bfa; border: 1px solid var(--border); margin-top: 10px; }
+    
+    #response-box { display: none; }
+    #response-box pre { color: #34d399; }
+
+    /* Upload progress styles */
+    .progress-container { display: none; margin-top: 10px; }
+    .progress-bar-bg { width: 100%; height: 16px; background: rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #10b981, #34d399); border-radius: 8px; transition: width 0.2s ease; }
+    .progress-text { font-size: 13px; margin-top: 6px; color: var(--muted); text-align: center; }
+
+    .status-msg { margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 14px; display: none; border: 1px solid transparent; }
+    .status-msg.success { display: block; background: rgba(16, 185, 129, 0.1); color: #34d399; border-color: rgba(16, 185, 129, 0.2); }
+    .status-msg.error   { display: block; background: rgba(239, 68, 68, 0.1); color: #f87171; border-color: rgba(239, 68, 68, 0.2); }
+
+    @keyframes rise { from { opacity:0; transform: translateY(12px) scale(0.98); } to { opacity:1; transform: translateY(0) scale(1); } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>WebServ Operations</h1>
+    <p>Test HTTP methods, CGI execution, and file management.</p>
+  </header>
+
+  <div class="nav-links">
+    <a href="/uploads/">Browse Uploads Directory</a>
+  </div>
+
+  <div class="container">
+    
+    <!-- GET Request via CGI -->
+    <div class="card">
+      <h3>GET Request (CGI)</h3>
+      <form action="/cgi/hello.py" method="GET">
+        <div class="form-group">
+          <label>Query: <input type="text" name="q" placeholder="Enter search term" /></label>
+        </div>
+        <button type="submit">Send GET Request</button>
+      </form>
+    </div>
+
+    <!-- POST Request with Text via CGI -->
+    <div class="card">
+      <h3>POST Request (CGI)</h3>
+      <form action="/cgi/hello_post.py" method="POST">
+        <div class="form-group">
+          <label>Name: <input type="text" name="name" placeholder="John Doe" required /></label>
+          <label>Email: <input type="email" name="email" placeholder="john@example.com" required /></label>
+        </div>
+        <button type="submit">Send POST Request</button>
+      </form>
+    </div>
+
+    <!-- File Upload (POST) -->
+    <div class="card">
+      <h3>File Upload (POST)</h3>
+      <form id="uploadForm" action="/uploads" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+          <label>Select File: <input type="file" name="file" id="fileInput" required /></label>
+        </div>
+        
+        <div>
+          <button type="submit" id="uploadBtn" style="width: 100%;">Upload to /uploads</button>
+          <div class="progress-container" id="progressContainer">
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0%</div>
+          </div>
+          <div class="status-msg" id="uploadStatus"></div>
+        </div>
+      </form>
+    </div>
+
+    <!-- DELETE Request -->
+    <div class="card">
+      <h3>DELETE Request</h3>
+      <form id="deleteForm">
+        <div class="form-group">
+          <label>Filename to Delete: <input type="text" id="deleteFilename" placeholder="e.g. myfile.txt" required /></label>
+        </div>
+        
+        <div>
+          <button type="button" onclick="submitDelete()" style="width: 100%;">Send DELETE Request</button>
+          <div class="status-msg" id="deleteStatus"></div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Response Log -->
+    <div class="card full-width">
+      <h3 id="response-toggle" style="cursor:pointer; user-select:none; display:flex; justify-content:space-between; border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+        <span>▸ Last Request Response Payload</span>
+        <span style="font-size:13px; opacity:0.6; font-weight:normal; color: var(--muted);">(Click to toggle visibility)</span>
+      </h3>
+      <div id="response-box"><pre id="response-content">No response recorded yet.</pre></div>
+    </div>
+
+    <!-- Reference -->
+    <div class="card full-width">
+      <h3>Server Routes Reference</h3>
+      <pre>
+GET  /cgi/hello.py?q=test
+  → Runs hello.py CGI script
+
+POST /cgi/hello_post.py (Body: name=John&email=john@example.com)
+  → Runs hello_post.py CGI script
+
+POST /uploads (multipart/form-data)
+  → File saved to server uploads directory
+
+DELETE /uploads/&lt;filename&gt;
+  → Deletes the specified file from uploads</pre>
+    </div>
+
+  </div>
+
+  <script>
+    // -- Toggle response box --
+    document.getElementById('response-toggle').addEventListener('click', function() {
+      var box = document.getElementById('response-box');
+      var title = this.querySelector('span');
+      if (box.style.display === 'none' || box.style.display === '') {
+        box.style.display = 'block';
+        title.textContent = '▾ Last Request Response Payload';
+      } else {
+        box.style.display = 'none';
+        title.textContent = '▸ Last Request Response Payload';
+      }
+    });
+
+    function showResponse(text) {
+      document.getElementById('response-content').textContent = text;
+      document.getElementById('response-box').style.display = 'block';
+      document.getElementById('response-toggle').querySelector('span').textContent = '▾ Last Request Response Payload';
+    }
+
+    // -- File Upload with progress --
+    document.getElementById('uploadForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      var fileInput = document.getElementById('fileInput');
+      if (!fileInput.files.length) return;
+
+      var formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      var xhr = new XMLHttpRequest();
+      var progressContainer = document.getElementById('progressContainer');
+      var progressFill = document.getElementById('progressFill');
+      var progressText = document.getElementById('progressText');
+      var uploadStatus = document.getElementById('uploadStatus');
+      var uploadBtn = document.getElementById('uploadBtn');
+
+      // Reset & show progress
+      progressContainer.style.display = 'block';
+      progressFill.style.width = '0%';
+      progressText.textContent = '0%';
+      uploadStatus.className = 'status-msg';
+      uploadStatus.style.display = 'none';
+      uploadBtn.disabled = true;
+      uploadBtn.textContent = 'Uploading…';
+
+      xhr.upload.addEventListener('progress', function(evt) {
+        if (evt.lengthComputable) {
+          var pct = Math.round((evt.loaded / evt.total) * 100);
+          progressFill.style.width = pct + '%';
+          progressText.textContent = pct + '% — ' + formatBytes(evt.loaded) + ' / ' + formatBytes(evt.total);
+        }
+      });
+
+      xhr.addEventListener('load', function() {
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = 'Upload to /uploads';
+        if (xhr.status >= 200 && xhr.status < 400) {
+          progressFill.style.background = '#4caf50';
+          uploadStatus.className = 'status-msg success';
+          uploadStatus.textContent = '✓ Upload complete! (HTTP ' + xhr.status + ')';
+          showResponse(xhr.responseText || '(empty response body)');
+        } else {
+          progressFill.style.background = '#e53935';
+          uploadStatus.className = 'status-msg error';
+          uploadStatus.textContent = '✗ Upload failed — HTTP ' + xhr.status;
+          showResponse(xhr.responseText || '(empty response body)');
+        }
+      });
+
+      xhr.addEventListener('error', function() {
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = 'Upload to /uploads';
+        progressFill.style.background = '#e53935';
+        uploadStatus.className = 'status-msg error';
+        uploadStatus.textContent = '✗ Network error — could not reach server.';
+      });
+
+      xhr.addEventListener('abort', function() {
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = 'Upload to /uploads';
+        uploadStatus.className = 'status-msg error';
+        uploadStatus.textContent = 'Upload aborted.';
+      });
+
+      xhr.open('POST', '/uploads', true);
+      xhr.send(formData);
+    });
+
+    // -- DELETE request --
+    function submitDelete() {
+      var filename = document.getElementById('deleteFilename').value.trim();
+      var deleteStatus = document.getElementById('deleteStatus');
+
+      if (!filename) {
+        deleteStatus.className = 'status-msg error';
+        deleteStatus.textContent = 'Please enter a filename.';
+        return;
+      }
+
+      var url = '/uploads/' + encodeURIComponent(filename);
+
+      fetch(url, { method: 'DELETE' })
+        .then(function(response) {
+          return response.text().then(function(text) {
+            if (response.ok) {
+              deleteStatus.className = 'status-msg success';
+              deleteStatus.textContent = '✓ Deleted "' + filename + '" (HTTP ' + response.status + ')';
+            } else {
+              deleteStatus.className = 'status-msg error';
+              deleteStatus.textContent = '✗ Delete failed — HTTP ' + response.status;
+            }
+            showResponse(text || '(empty response body)');
+          });
+        })
+        .catch(function(err) {
+          deleteStatus.className = 'status-msg error';
+          deleteStatus.textContent = '✗ Network error: ' + err.message;
+        });
+    }
+
+    // -- Utility --
+    function formatBytes(bytes) {
+      if (bytes === 0) return '0 B';
+      var k = 1024;
+      var sizes = ['B', 'KB', 'MB', 'GB'];
+      var i = Math.floor(Math.log(bytes) / Math.log(k));
+      return (bytes / Math.pow(k, i)).toFixed(1) + ' ' + sizes[i];
+    }
+  </script>
+</body>
+</html>

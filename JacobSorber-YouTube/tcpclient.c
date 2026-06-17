@@ -1,24 +1,4 @@
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <signal.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <stdarg.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <sys/time.h>
-#include <sys/ioctl.h>
-#include <netdb.h>
-
-// Standard HTTP port
-#define SERVER_PORT 80
-#define MAXLINE 4096
-#define SA struct sockaddr
-
-void err_n_die(const char *fmt, ...);
+#include "common.h"
 
 int main(int argc, char **argv)
 {
@@ -49,29 +29,4 @@ int main(int argc, char **argv)
     if (n < 0)
         err_n_die("Read error");
     exit(EXIT_SUCCESS);
-}
-
-void err_n_die(const char *fmt, ...)
-{
-    int errno_save;
-    va_list ap;
-
-    // Save errno in case it's changed by this function
-    errno_save = errno;
-
-    // Print the formatted error message to stderr
-    va_start(ap, fmt);
-    vfprintf(stderr, fmt, ap);
-    fprintf(stderr, "\n");
-    fflush(stderr);
-    
-    if (errno_save != 0) {
-        fprintf(stderr, "(errno = %d) : %s\n", errno_save, strerror(errno_save));
-        strerror(errno_save);
-        fprintf(stderr, "\n");
-        fflush(stderr);
-    }
-    va_end(ap);
-
-    exit(EXIT_FAILURE);
 }
