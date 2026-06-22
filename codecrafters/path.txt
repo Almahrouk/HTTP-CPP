@@ -1,1 +1,0 @@
-cd /mnt/c/Users/aalma/Documents/GitHub/HTTP-CPP/codecrafters/
