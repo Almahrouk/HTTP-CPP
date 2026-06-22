@@ -6,4 +6,9 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-
+#include <vector>
+#include <bits/stdc++.h>
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <stack>

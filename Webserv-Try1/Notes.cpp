@@ -119,21 +119,34 @@ G] CGI:
 ⚠ CGI timeout handling is mandatory — a hanging script must not block your server. 
 Use waitpid() with WNOHANG in your poll loop.
 
+watch -n 1 'lsof -i :1234'
 H] Testing:
-    - check listening ports:
+    - check runnig program: sleep(...)
+        - ps aux | grep webserver
+            - S: Sleep
+            - +: Foreground
+    - check allcate socket: bind
+        - ls, cat:
+            - ls -la /proc/<pid>/fd
+            - cat /proc/<pid>/net/tcp
+        - lsof:
+            - lsof -p <pid>
+                - webserver 1266 aalma   3u  sock    0,8      0t0             12682 protocol: TCP
+    - check listening ports: listen
         - ss:
-            - ss -tlnp
+            - ss -tlnp | grep <PID>
+                - State         Recv-Q        Send-Q                Local Address:Port                Peer Address:Port         Process
+                - LISTEN           0          5                         0.0.0.0:1234                        0.0.0.0:*           users:(("webserver",pid=1518,fd=3))
             - ss -tlnp sport = :8080
         - netstat:
             - netstat -tlnp
             - netstat -tlnp | grep 8080
         - lsof:
-            - lsof -p <pid> | grep socket
+            - lsof -p <pid>
+                - COMMAND    PID  USER  FD  TYPE   DEVICE   SIZE/OFF      NODE    NAME
+                - webserver 1518 aalma  3u  IPv4   18469      0t0         TCP     *:1234 (LISTEN)
             - lsof -i :8080
             - lsof -i -P -n | grep LISTEN
-        - ls, cat:
-            - ls -la /proc/<pid>/fd
-            - cat /proc/<pid>/net/tcp
         - watch:
             - watch -n 1 'ss -tlnp | grep webserv'
     - traffic capture:
@@ -156,6 +169,8 @@ H] Testing:
         - nc -v localhost 8080
         - nc 127.0.0.1 8080
         - nc 127.0.0.1 8080 < request.txt
+    - tcpkill: RES Flag -> 
+        -  sudo tcpkill -i lo port 1234
     - test files:
         - printf "GET /cgi/hello.py?q=test HTTP/1.1\r\nHost: localhost:8080\r\n\r\n" > request.txt
         - cat -A request.txt
@@ -202,4 +217,22 @@ H] Testing:
 methods, CGI, errors, edge cases
 1. RFC 7230–7235, request/response cycle, headers, status codes
 2. Run nginx locally, test GET/POST/DELETE, study its config format closely
+
+
+
+
+
+State           Description
+LISTEN          Server waiting for incoming connections
+SYN_SENT        Client sent SYN, waiting for SYN-ACK
+SYN_RECV        Server received SYN, sent SYN-ACK
+ESTABLISHED     Connection active, data can flow
+FIN_WAIT1       Local side sent FIN, waiting for ACK
+FIN_WAIT2       Got ACK for FIN, waiting for remote FIN
+CLOSE_WAIT      Remote closed, local app hasn't closed yet (app bug if stuck)
+LAST_ACK        Waiting for final ACK after sending FIN
+TIME_WAIT       Waiting to ensure remote received final ACK (2×MSL timeout)
+CLOSING         Both sides sent FIN simultaneously
+CLOSED          Connection terminated
+
 */

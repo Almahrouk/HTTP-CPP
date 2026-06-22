@@ -1,7 +1,7 @@
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
 
-#include "common.hpp"
+#include "Common.hpp"
 
 enum LogLevel
 {

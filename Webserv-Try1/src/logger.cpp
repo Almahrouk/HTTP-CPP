@@ -1,5 +1,4 @@
-
-#include "logger.hpp"
+#include "Logger.hpp"
 #include <iostream>
 
 void log(LogLevel level, const std::string& msg) {

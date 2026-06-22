@@ -1,11 +1,11 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -Wextra -I./include
+CXXFLAGS = -std=c++98 -Wall -Wextra -I./include
 SRCDIR = src
 INCDIR = include
 BINDIR = bin
 
 # Source files
-SOURCES = main.cpp $(SRCDIR)/server.cpp $(SRCDIR)/logger.cpp
+SOURCES = main.cpp $(SRCDIR)/server.cpp $(SRCDIR)/logger.cpp $(SRCDIR)/Client.cpp 
 OBJECTS = $(SOURCES:.cpp=.o)
 TARGET = $(BINDIR)/webserver
 

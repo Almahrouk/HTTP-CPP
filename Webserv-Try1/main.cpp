@@ -1,8 +1,21 @@
 #include "logger.hpp"
 #include "server.hpp"
+// #include "ConfigParsing.hpp"
 
 int main(void)
 {
+    // log(INFO, "=== Tokenization ===");
+    // if (ac != 2)
+    // {
+    //     log(ERROR, "Usage ./webserve <Configuration File>");
+    //     return (EXIT_FAILURE);
+    // }
+    // ConfigParsing config(av[1]);
+    // if (config.Check_File() != EXIT_SUCCESS)
+    // {
+    //     return (EXIT_FAILURE);
+    // }
+
     log(INFO, "=== Web Server ===");
     Server server;
     
