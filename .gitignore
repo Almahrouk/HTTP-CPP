@@ -6,3 +6,5 @@ WebServ-Testing/*
 *.o
 */*.o
 */*/*.o
+
+Webserv-Try1/bin/
